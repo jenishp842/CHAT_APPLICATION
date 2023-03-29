@@ -15,7 +15,6 @@ exports.Register = catchAsync(async (req, res, next) => {
 });
 
 exports.Login = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return sendError(res, 404, "email or password is incorrect");
@@ -26,19 +25,16 @@ exports.Login = catchAsync(async (req, res, next) => {
   }
   const token = user.getJwt();
   user._doc.token = token;
-  console.log(user, token);
   return sendResponse(res, 200, { user });
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  console.log("Inside");
   const users = await User.find({ _id: { $ne: req.user } });
   return sendResponse(res, 200, { users });
 });
 
 exports.forgotPassword = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   if (!email) {
     return sendError(res, 400, "Email is required");
   }

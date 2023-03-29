@@ -25,27 +25,32 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-ConnectMongo(process.env.MONGOD_URL).then((e) =>
-  console.log("conncted to mongo db")
-);
+ConnectMongo(process.env.MONGOD_URL).then((e) => console.log("conncted to mongo db"));
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "*",
+    origin: "*"
     // credentials: true,
-  },
+  }
 });
 
+global.customerObj = {};
 io.on("connection", (socket) => {
-  console.log("Connected to socket.io", socket);
-  socket.on("admit-user", (data) => console.log(data));
-  socket.on("setup", (userData) => {
-    socket.emit("connected");
+  console.log("Socket connection established...", socket.id);
+  socket.on("admit-user", (userId) => {
+    console.log("New User: ", userId);
+    customerObj[userId] = socket.id;
+    console.log("customers: ", customerObj);
+  });
+  socket.on("chat", (data) => {
+    console.log("data", data);
+    socket.to(customerObj[data.receiver]).emit("receivedMessage", data.msg);
   });
 });
+console.log(customerObj);
 io.on("error", () => console.log("error"));
 /**
  * Normalize a port into a number, string, or false.
