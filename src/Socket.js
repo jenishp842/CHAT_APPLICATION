@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 export const Socket = io(
-  "https://b810-2406-b400-d5-4115-e5fb-90fd-a68f-60ee.in.ngrok.io/api/v1"
+  "https://ec74-2406-b400-d5-4115-6d7b-c0a2-3b1d-c3d4.ngrok.io/api/v1"
 );
 
 // eslint-disable-next-line no-unused-vars

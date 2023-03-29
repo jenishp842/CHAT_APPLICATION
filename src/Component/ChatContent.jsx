@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ENDPOINT } from "../Endpoint";
 import axios from "axios";
 
@@ -9,12 +9,14 @@ const ChatContent = ({
   chatData,
   setChatData,
 }) => {
+  const chatContainerRef = useRef(null);
   const [text, setText] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
     if(!text) return
     setChatData({...chatData,messages:[...chatData.messages,{message:text}]});
         setText("")
+        // chatContainerRef.current.scrollIntoView({behavior: 'smooth'})
     axios
       .post(
         `${ENDPOINT}/send`,
@@ -37,6 +39,9 @@ const ChatContent = ({
         console.log(error);
       });
   };
+  useEffect(() => {
+    chatContainerRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, [chatData]);
   return (
     <>
       <div className="chat__main">
@@ -47,7 +52,7 @@ const ChatContent = ({
           </button>
         </header>
 
-        <div className="message__container">
+        <div className="message__container" >
           {chatData?.messages?.map((item) => (
             <div className="message__chats">
               <p className={`${currentChat._id === item.sender ? "receiver_name" : "sender__name"} `}>
@@ -64,6 +69,7 @@ const ChatContent = ({
               </div>
             </div>
           ))}
+          <div ref={chatContainerRef}/>
           {/* <div className="message__chats">
             <p className="sender__name">You</p>
             <div className="message__sender">
@@ -82,7 +88,7 @@ const ChatContent = ({
             <p>Someone is typing...</p>
           </div> */}
         </div>
-        <div className="chat__footer">
+        <div className="chat__footer" >
           <form className="form" onSubmit={handleSubmit}>
             <input
               type="text"

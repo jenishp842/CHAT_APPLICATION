@@ -7,6 +7,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 // import Grid from "./Pages/Grid";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
+import SelectLogo from "./Pages/SelectLogo";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <ToastContainer />
         <Routes>
           <Route exact path="/" element={<Login />} />
+          <Route exact path="/select-icon" element={<SelectLogo />} />
           <Route exact path="/forget" element={<ForgotPassword />} />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/chat" element={<Chat />} />
