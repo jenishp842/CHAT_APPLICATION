@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ENDPOINT } from "../Endpoint";
 import axios from "axios";
+import { Socket } from "../Socket";
 
 const ChatContent = ({
   handleLogout,
@@ -12,9 +13,13 @@ const ChatContent = ({
   const [text, setText] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(!text) return
-    setChatData({...chatData,messages:[...chatData.messages,{message:text}]});
-        setText("")
+    if (!text) return;
+    setChatData({
+      ...chatData,
+      messages: [...chatData.messages, { message: text }],
+    });
+    Socket.emit("chat", { receiver: currentChat._id, msg: text });
+    setText("");
     axios
       .post(
         `${ENDPOINT}/send`,
@@ -50,7 +55,13 @@ const ChatContent = ({
         <div className="message__container">
           {chatData?.messages?.map((item) => (
             <div className="message__chats">
-              <p className={`${currentChat._id === item.sender ? "receiver_name" : "sender__name"} `}>
+              <p
+                className={`${
+                  currentChat._id === item.sender
+                    ? "receiver_name"
+                    : "sender__name"
+                } `}
+              >
                 {currentChat._id === item.sender ? currentChat.name : "You"}
               </p>
               <div
@@ -77,7 +88,7 @@ const ChatContent = ({
               <p>Hey, I'm good, you?</p>
             </div>
           </div> */}
-{/* 
+          {/* 
           <div className="message__status">
             <p>Someone is typing...</p>
           </div> */}
