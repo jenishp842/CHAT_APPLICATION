@@ -1,0 +1,1 @@
+export const ENDPOINT = "https://b810-2406-b400-d5-4115-e5fb-90fd-a68f-60ee.in.ngrok.io/api/v1"
