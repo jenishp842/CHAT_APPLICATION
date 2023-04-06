@@ -1,7 +1,7 @@
 import  {io}  from "socket.io-client";
 
 const Socket = io(
-  "https://ec74-2406-b400-d5-4115-6d7b-c0a2-3b1d-c3d4.ngrok.io", {
+  "http://localhost:5000", {
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,

@@ -14,6 +14,8 @@ const Sidebar = ({ data, setCurrentChat, currentChat,handleSelectUser }) => {
           <div className="chat__users">
             {data &&
               data?.map((i) => (
+                <div className="user-chat">
+                  <img src={i.profilepic} className="chat-image"/>
                 <p
                   className="user_list"
                   onClick={() => {
@@ -22,6 +24,7 @@ const Sidebar = ({ data, setCurrentChat, currentChat,handleSelectUser }) => {
                 >
                   {i.name}
                 </p>
+                </div>
               ))}
           </div>
         </div>

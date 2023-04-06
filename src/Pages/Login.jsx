@@ -22,6 +22,10 @@ const Login = () => {
       .then((response) => {
         const user = response.data.data.user;
         localStorage.setItem("token", JSON.stringify(user));
+        if (!user.profilepic) {
+          navigate("/select-icon");
+          return;
+        }
         toast.success("Login Successful!");
         navigate("/chat");
       })
