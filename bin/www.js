@@ -3,8 +3,9 @@
 /**
  * Module dependencies.
  */
-
+var cors = require("cors");
 var app = require("../app");
+app.use(cors({ origin: "*" }));
 var debug = require("debug")("chat:server");
 var http = require("http");
 const dotenv = require("dotenv");
@@ -13,7 +14,7 @@ const { ConnectMongo } = require("../connection/connection");
  * Get port from environment and store in Express.
  */
 dotenv.config();
-var port = normalizePort(process.env.PORT || "5000");
+var port = normalizePort("5000");
 app.set("port", port);
 
 /**
@@ -39,13 +40,22 @@ const io = require("socket.io")(server, {
   },
 });
 
+global.customerObj = {};
 io.on("connection", (socket) => {
-  console.log("Connected to socket.io", socket);
-  socket.on("admit-user", (data) => console.log(data));
-  socket.on("setup", (userData) => {
-    socket.emit("connected");
+  console.log("Socket connection established...", socket.id);
+  socket.on("admit-user", (userId) => {
+    console.log("New User: ", userId);
+    customerObj[userId] = socket.id;
+    console.log("customers: ", customerObj);
+  });
+  socket.on("chat", (data) => {
+    console.log("data", data);
+    socket
+      .to(customerObj[data.receiver])
+      .emit("receivedMessage", { receiver: data.receiver, msg: data.msg,sender:data.sender });
   });
 });
+console.log(customerObj);
 io.on("error", () => console.log("error"));
 /**
  * Normalize a port into a number, string, or false.
