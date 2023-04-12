@@ -49,10 +49,15 @@ io.on("connection", (socket) => {
     console.log("customers: ", customerObj);
   });
   socket.on("chat", (data) => {
-    console.log("data", data);
-    socket
-      .to(customerObj[data.receiver])
-      .emit("receivedMessage", { receiver: data.receiver, msg: data.msg,sender:data.sender });
+    socket.to(customerObj[data.receiver]).emit("receivedMessage", {
+      receiver: data.receiver,
+      msg: data.msg,
+      sender: data.sender,
+    });
+  });
+  socket.on("typing", (data) => {
+    console.log(data,"typing")
+    socket.to(customerObj[data.receiver]).emit("istyping", data);
   });
 });
 console.log(customerObj);
