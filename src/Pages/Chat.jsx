@@ -10,8 +10,9 @@ import { Socket } from "../Socket";
 function Chat() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
-  const [chatData, setChatData] = useState(null);
+  const [currentChat, setCurrentChat] = useState({});
+  const [receivedMessage, setReceivedMessage] = useState(null);
+  const [chatData, setChatData] = useState({});
   const loginUser = JSON.parse(localStorage.getItem("token"));
   useEffect(() => {
     if (currentChat?._id) {
@@ -60,12 +61,29 @@ function Chat() {
       });
   }, []);
   useEffect(() => {
-    if (Socket.connected) {
-      console.log("inside socket conncted");
-      Socket.emit("admit-user", loginUser._id);
-      Socket.on("receivedMessage", (msg) => console.log(msg));
+    if (receivedMessage) {
+      if (currentChat._id !== receivedMessage.sender) return;
+      setChatData((prev) => ({
+        ...prev,
+        messages: [
+          ...prev.messages,
+          { message: receivedMessage.msg, sender: receivedMessage.sender },
+        ],
+      }));
     }
-  }, []);
+  }, [receivedMessage]);
+  useEffect(() => {
+    if (Socket.connected) {
+      console.log("inside socket conncted", Socket);
+      Socket.emit("admit-user", loginUser._id);
+      Socket.on("receivedMessage", (data) => {
+        console.log(data, currentChat);
+        if (loginUser._id === data.receiver) {
+          setReceivedMessage(data);
+        }
+      });
+    }
+  }, [Socket.connected]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

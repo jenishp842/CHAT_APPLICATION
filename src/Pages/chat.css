@@ -21,12 +21,9 @@
   margin-bottom: 30px;
 }
 .user_list {
-  padding: 5px;
-
-  border-bottom: 1px solid #607eaa;
   cursor: pointer;
 }
-p.user_list:hover {
+.user-chat:hover {
   background: #e8e2da8a;
   transition: 0.1s;
   padding: 5px;
@@ -98,12 +95,11 @@ p.user_list:hover {
 }
 .message__container {
   width: 100%;
-  height: 69vh;
+  height: 76vh;
   background-color: #fff;
   padding: 20px;
   overflow-y: scroll;
   display: flex;
-  justify-content: end;
   flex-direction: column; /* Reverse the order of the messages */
 }
 
@@ -118,6 +114,8 @@ p.user_list:hover {
   padding: 20px;
   background-color: #f9f5eb;
   border-top: 1px solid #fdfdfd;
+  position: fixed;
+  bottom: 0;
 }
 
 .form {
@@ -187,10 +185,7 @@ p.user_list:hover {
   text-align: right;
   width: 100%;
 }
-.receiver_name {
-  /* text-align: left; */
-  color: rgb(238, 102, 102);
-}
+
 .message__status {
   position: fixed;
   bottom: 50px;
@@ -215,4 +210,16 @@ p.user_list:hover {
   background-color: #fff;
   border-radius: 50%;
   border: 3px solid green;
+}
+
+.user-chat {
+  display: flex;
+  border-bottom: 1px solid gray;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.chat-image{
+  height: 50px;
 }

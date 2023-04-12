@@ -1,6 +1,6 @@
 import React from "react";
 
-const Sidebar = ({ data, setCurrentChat, currentChat,handleSelectUser }) => {
+const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
   const onChatHandle = (item) => {
     setCurrentChat(item);
   };
@@ -14,16 +14,14 @@ const Sidebar = ({ data, setCurrentChat, currentChat,handleSelectUser }) => {
           <div className="chat__users">
             {data &&
               data?.map((i) => (
-                <div className="user-chat">
-                  <img src={i.profilepic} className="chat-image"/>
-                <p
-                  className="user_list"
+                <div
+                  className="user-chat"
                   onClick={() => {
                     onChatHandle(i);
                   }}
                 >
-                  {i.name}
-                </p>
+                  <img src={i.profilepic} className="chat-image" />
+                  <p className="user_list">{i.name}</p>
                 </div>
               ))}
           </div>

@@ -10,6 +10,7 @@ const ChatContent = ({
   chatData,
   setChatData,
 }) => {
+  const loginUser = JSON.parse(localStorage.getItem("token"));
   const chatContainerRef = useRef(null);
   const [text, setText] = useState("");
   const handleSubmit = (event) => {
@@ -19,7 +20,7 @@ const ChatContent = ({
       ...chatData,
       messages: [...chatData.messages, { message: text }],
     });
-    Socket.emit("chat", { receiver: currentChat._id, msg: text });
+    Socket.emit("chat", { receiver: currentChat._id, msg: text,sender: loginUser._id});
     setText("");
     axios
       .post(

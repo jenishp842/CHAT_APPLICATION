@@ -1,1 +1,1 @@
-export const ENDPOINT = "http://localhost:5000/api/v1"
+export const ENDPOINT = "https://add7-103-250-137-105.ngrok.io/api/v1"

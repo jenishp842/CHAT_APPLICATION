@@ -1,14 +1,6 @@
-import  {io}  from "socket.io-client";
+import { io } from "socket.io-client";
 
-const Socket = io(
-  "http://localhost:5000", {
-  reconnection: true,
-  reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
-  reconnectionAttempts: 3,
-  transports: ['websocket']
-}
-);
+export const Socket = io("https://6851-2405-201-2005-8095-c574-51c8-d092-c08a.ngrok-free.app");
 Socket.on("connect", (socket) => {
   console.log("connected socket connection status::", socket);
 });
@@ -20,5 +12,3 @@ Socket.on("connect_error", (err) => {
 Socket.on("disconnect", () => {
   console.log("Disconnected socket connection status: ", Socket.connected);
 });
-
-export {Socket};
