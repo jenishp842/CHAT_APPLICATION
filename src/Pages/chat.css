@@ -64,6 +64,7 @@
 }
 .chat__header {
   margin: 30px 0 20px 0;
+  cursor: pointer;
   font-size: 11px;
   text-align: center;
 }
