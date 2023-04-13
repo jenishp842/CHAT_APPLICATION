@@ -21,7 +21,10 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
                   }}
                 >
                   <img src={i.profilepic} className="chat-image" />
-                  <p className="user_list">{i.name}</p>
+                  <div>
+                    <p className="user_list">{i.name}</p>
+                    {i.typing ? `${i.name} is typing` : ""}
+                  </div>
                 </div>
               ))}
           </div>

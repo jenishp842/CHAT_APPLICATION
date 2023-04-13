@@ -11,6 +11,7 @@ function Chat() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [currentChat, setCurrentChat] = useState({});
+  const [typingData, setTypingData] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [chatData, setChatData] = useState({});
   const loginUser = JSON.parse(localStorage.getItem("token"));
@@ -73,6 +74,20 @@ function Chat() {
     }
   }, [receivedMessage]);
   useEffect(() => {
+    if (typingData) {
+      if (currentChat._id === typingData.sender) {
+        setCurrentChat((prev) => ({ ...prev, typing: !typingData.stoptyping }));
+      }
+      setData(
+        data.map((item) =>
+          item._id === typingData.sender
+            ? { ...item, typing: !typingData.stoptyping }
+            : item
+        )
+      );
+    }
+  }, [typingData]);
+  useEffect(() => {
     if (Socket.connected) {
       console.log("inside socket conncted", Socket);
       Socket.emit("admit-user", loginUser._id);
@@ -81,6 +96,9 @@ function Chat() {
         if (loginUser._id === data.receiver) {
           setReceivedMessage(data);
         }
+      });
+      Socket.on("istyping", (data) => {
+        setTypingData(data);
       });
     }
   }, [Socket.connected]);

@@ -12,6 +12,8 @@ const ChatContent = ({
 }) => {
   const loginUser = JSON.parse(localStorage.getItem("token"));
   const chatContainerRef = useRef(null);
+  const [typing, setisTyping] = useState(false);
+  const [timeout, setTiemout] = useState("");
   const [text, setText] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,7 +22,11 @@ const ChatContent = ({
       ...chatData,
       messages: [...chatData.messages, { message: text }],
     });
-    Socket.emit("chat", { receiver: currentChat._id, msg: text,sender: loginUser._id});
+    Socket.emit("chat", {
+      receiver: currentChat._id,
+      msg: text,
+      sender: loginUser._id,
+    });
     setText("");
     axios
       .post(
@@ -45,8 +51,45 @@ const ChatContent = ({
       });
   };
   useEffect(() => {
-    chatContainerRef.current?.scrollIntoView({behavior: 'smooth'});
+    chatContainerRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatData]);
+  const handleInput = (e) => {
+    clearTimeout(timeout);
+    if (!typing) {
+      console.log("typing fe")
+      setisTyping(true);
+      Socket.emit("typing", {
+        receiver: currentChat._id,
+        sender: loginUser._id,
+      });
+    }
+    setTiemout(
+      setTimeout(() => {
+        setisTyping(false);
+        Socket.emit("typing", {
+          stoptyping: true,
+          receiver: currentChat._id,
+          sender: loginUser._id,
+        });
+      }, 2000)
+    );
+    setText(e.target.value);
+  };
+  // const handleInputChange = (event) => {
+  //   setMessage(event.target.value);
+
+  //   if (!isTyping) {
+  //     setIsTyping(true);
+  //     socket.emit("typing", { username, room });
+  //   } else {
+  //     clearTimeout(typingTimer);
+  //   }
+
+  //   const typingTimer = setTimeout(() => {
+  //     setIsTyping(false);
+  //     socket.emit("stop typing", { username, room });
+  //   }, 2000);
+  // };
   return (
     <>
       <div className="chat__main">
@@ -57,7 +100,7 @@ const ChatContent = ({
           </button>
         </header>
 
-        <div className="message__container" >
+        <div className="message__container">
           {chatData?.messages?.map((item) => (
             <div className="message__chats">
               <p
@@ -80,7 +123,7 @@ const ChatContent = ({
               </div>
             </div>
           ))}
-          <div ref={chatContainerRef}/>
+          <div ref={chatContainerRef} />
           {/* <div className="message__chats">
             <p className="sender__name">You</p>
             <div className="message__sender">
@@ -99,14 +142,15 @@ const ChatContent = ({
             <p>Someone is typing...</p>
           </div> */}
         </div>
-        <div className="chat__footer" >
+        {currentChat.typing && <p>typing</p>}
+        <div className="chat__footer">
           <form className="form" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Write message"
               className="message"
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={handleInput}
             />
             <button className="sendBtn">SEND</button>
           </form>
