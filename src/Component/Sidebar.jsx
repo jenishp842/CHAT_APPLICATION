@@ -7,6 +7,7 @@ import { ENDPOINT } from "../Endpoint";
 const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeGroups, setActiveGroups] = useState([]);
+  const [showActiveUsers, setShowActiveUsers] = useState(true);
 
   const onChatHandle = (item) => {
     setCurrentChat(item);
@@ -40,7 +41,17 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
         console.log(error);
       });
   }, []);
-console.log(activeGroups,"💥")
+
+  const handleActiveGroupsClick = () => {
+    setShowActiveUsers(false);
+  };
+  const handleActiveusersClick = () => {
+    setShowActiveUsers(true);
+  };
+  // const handleActiveUsersClick = () => {
+  //   vwt(true);
+  // };
+
   return (
     <>
       <div className="chat__sidebar">
@@ -61,27 +72,44 @@ console.log(activeGroups,"💥")
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
           <div>
-            <h4 className="chat__header">ACTIVE USERS</h4>
-            <div className="chat__users">
+            <div
+              className="d-flex"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              {" "}
+              <h4 className="chat__header" onClick={handleActiveusersClick}>
+                USER CHATS
+              </h4>
+              <h4 className="chat__header" onClick={handleActiveGroupsClick}>
+                GROUP CHATS
+              </h4>
+            </div>
+            <div
+              className="chat__users"
+              // style={{ display: showActiveUsers ? "flex" : "none" }}
+            >
               {data &&
-                data?.map((i) => (
+                (showActiveUsers ? data : activeGroups)?.map((i) => (
                   <div
                     className="user-chat"
                     onClick={() => {
                       onChatHandle(i);
                     }}
                   >
-                    <img src={i.profilepic} className="chat-image" />
+                    {showActiveUsers && (
+                      <img src={i.profilepic} className="chat-image" />
+                    )}
+                    {i.typing ? `${i.name} is typing` : ""}
                     <p className="user_list">{i.name}</p>
                   </div>
                 ))}
             </div>
           </div>
-          <div>
-            <h4 className="chat__header">ACTIVE GROUPS</h4>
-            <div className="chat__users">
+          {/* <div>
+            <h4 className="chat__header" onClick={handleActiveGroupsClick}>ACTIVE GROUPS</h4>
+            <div className="chat__users" style={{ display: showActiveUsers ? 'none' : 'flex' }}>
               {activeGroups.map((group) => (
                 <div
                   className="user-chat"
@@ -89,12 +117,11 @@ console.log(activeGroups,"💥")
                     setCurrentChat(group);
                   }}
                 >
-                  <img src={group.image} className="chat-image" />
                   <p className="user_list">{group.name}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       {isModalOpen && <GroupModal users={data} closeModal={closeModal} />}
