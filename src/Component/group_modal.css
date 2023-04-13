@@ -1,0 +1,84 @@
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+
+  .modal-content {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 500px;
+  }
+  
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .group-name-input {
+    margin-bottom: 20px;
+  }
+  
+  .group-name-input label,
+  .search-input label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .group-name-input input[type="text"],
+  .search-input input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .search-input {
+    margin-bottom: 20px;
+  }
+  
+  .user-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+  
+  .user-list div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    justify-content: space-between;
+}
+  
+  .user-list label {
+    margin-right: 10px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+  
