@@ -4,7 +4,7 @@ import axios from "axios";
 import "./group_modal.css";
 import { ENDPOINT } from "../Endpoint";
 
-const GroupModal = ({ users, closeModal }) => {
+const GroupModal = ({ users, closeModal, isGroupDetailsOpen, group }) => {
   const [groupName, setGroupName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -26,17 +26,19 @@ const GroupModal = ({ users, closeModal }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post(`${ENDPOINT}/create-group`, {
-        name: groupName,
-        users: selectedUsers,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("token"))?.token
-          }`,
+      const res = await axios.post(
+        `${ENDPOINT}/create-group`,
+        {
+          name: groupName,
+          users: selectedUsers,
         },
-      }
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("token"))?.token
+            }`,
+          },
+        }
       );
       console.log(res.data);
       closeModal();
@@ -46,47 +48,65 @@ const GroupModal = ({ users, closeModal }) => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={closeModal}>
-          &times;
-        </span>
-        <form onSubmit={handleSubmit}>
-          <div className="group-name-input">
-            <label htmlFor="group-name">Group Name:</label>
-            <input
-              type="text"
-              id="group-name"
-              value={groupName}
-              onChange={handleGroupNameChange}
-            />
-          </div>
-          <div className="search-input">
-            <label htmlFor="search">Search:</label>
-            <input type="text" id="search" />
-          </div>
-          <h4>Selected Users:</h4>
-          <div className="user-list">
-            {users.map((user) => (
-              <div key={user._id}>
-                <label htmlFor={user._id}>{user.name}</label>
-                <input
-                  type="checkbox"
-                  id={user._id}
-                  name={user.name}
-                  onChange={handleUserSelection}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="button-group">
-            <div className="hover">
-              <button className="hover">Create Group</button>
+    <>
+      {isGroupDetailsOpen ? (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            {console.log(users, "🧡")}
+            <div>
+            {users.map((i) => {
+             return <p>{i.name}</p>;
+            })}
             </div>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      ) : (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <form onSubmit={handleSubmit}>
+              <div className="group-name-input">
+                <label htmlFor="group-name">Group Name:</label>
+                <input
+                  type="text"
+                  id="group-name"
+                  value={groupName}
+                  onChange={handleGroupNameChange}
+                />
+              </div>
+              <div className="search-input">
+                <label htmlFor="search">Search:</label>
+                <input type="text" id="search" />
+              </div>
+              <h4>Selected Users:</h4>
+              <div className="user-list">
+                {users.map((user) => (
+                  <div key={user._id}>
+                    <label htmlFor={user._id}>{user.name}</label>
+                    <input
+                      type="checkbox"
+                      id={user._id}
+                      name={user.name}
+                      onChange={handleUserSelection}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="button-group">
+                <div className="hover">
+                  <button className="hover">Create Group</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

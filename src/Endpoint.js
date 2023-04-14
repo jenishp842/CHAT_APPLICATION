@@ -1,1 +1,1 @@
-export const ENDPOINT = "https://add7-103-250-137-105.ngrok.io/api/v1"
+export const ENDPOINT = "https://107d-2406-b400-d5-b4c2-898c-8a26-db6c-5ca8.ngrok-free.app/api/v1"

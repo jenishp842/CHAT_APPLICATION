@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export const Socket = io("https://6851-2405-201-2005-8095-c574-51c8-d092-c08a.ngrok-free.app");
+export const Socket = io("https://107d-2406-b400-d5-b4c2-898c-8a26-db6c-5ca8.ngrok-free.app");
 Socket.on("connect", (socket) => {
   console.log("connected socket connection status::", socket);
 });

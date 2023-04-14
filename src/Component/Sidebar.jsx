@@ -44,7 +44,10 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
 
   const handleActiveGroupsClick = () => {
     setShowActiveUsers(false);
+
   };
+
+
   const handleActiveusersClick = () => {
     setShowActiveUsers(true);
   };
@@ -86,27 +89,29 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
                 GROUP CHATS
               </h4>
             </div>
-            <div
-              className="chat__users"
-              // style={{ display: showActiveUsers ? "flex" : "none" }}
-            >
+            <div className="chat__users">
               {data &&
                 (showActiveUsers ? data : activeGroups)?.map((i) => (
-                  <div
-                    className="user-chat"
-                    onClick={() => {
-                      onChatHandle(i);
-                    }}
-                  >
-                    {showActiveUsers && (
-                      <img src={i.profilepic} className="chat-image" />
-                    )}
-                    {i.typing ? `${i.name} is typing` : ""}
-                    <p className="user_list">{i.name}</p>
+                  <div className="user-chat" onClick={() => {
+                    onChatHandle(i);
+                  }}>
+                  
+                      {showActiveUsers && (
+                        <img src={i.profilepic} className="chat-image" />
+                      )}
+                      <p className="user_list" style={{ marginRight: "6px" }}>
+                        {i.name}
+                      </p>
+                      <span style={{ color: "green" }}>
+                        {" "}
+                        {i.typing ? `typing...` : ""}
+                      </span>
+                      
                   </div>
                 ))}
             </div>
           </div>
+
           {/* <div>
             <h4 className="chat__header" onClick={handleActiveGroupsClick}>ACTIVE GROUPS</h4>
             <div className="chat__users" style={{ display: showActiveUsers ? 'none' : 'flex' }}>
@@ -124,7 +129,9 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
           </div> */}
         </div>
       </div>
+
       {isModalOpen && <GroupModal users={data} closeModal={closeModal} />}
+      
     </>
   );
 };
