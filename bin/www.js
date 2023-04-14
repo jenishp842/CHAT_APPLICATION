@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
   socket.on("admit-user", (userId) => {
     console.log("New User: ", userId);
     customerObj[userId] = socket.id;
+    socket.broadcast.emit("newuser", userId);
     console.log("customers: ", customerObj);
   });
   socket.on("chat", (data) => {
@@ -56,8 +57,12 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("typing", (data) => {
-    console.log(data,"typing")
+    console.log(data, "typing");
     socket.to(customerObj[data.receiver]).emit("istyping", data);
+  });
+  socket.on("remove", (id) => {
+    delete customerObj[id];
+    socket.broadcast.emit("remove-user",id)
   });
 });
 console.log(customerObj);

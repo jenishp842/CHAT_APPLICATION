@@ -12,7 +12,7 @@ exports.sendChat = catchAsync(async (req, res) => {
 exports.getGroupChat = catchAsync(async (req, res) => {
   const chats = await Chat.find({
     isGroup: true,
-    users: { $all: [req.user] },
+    users: { $in: [req.user] },
   }).populate("messages");
   sendResponse(res, 200, chats);
 });

@@ -28,13 +28,18 @@ exports.Login = catchAsync(async (req, res, next) => {
   return sendResponse(res, 200, { user });
 });
 
-exports.documentUpload = catchAsync(async (req,res)=>{
-  console.log(req)
-})
+exports.documentUpload = catchAsync(async (req, res) => {
+  console.log(req);
+});
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const users = await User.find({ _id: { $ne: req.user } });
-  return sendResponse(res, 200, { users });
+  const users = await User.find({ _id: { $ne: req.user } }).lean();
+  return sendResponse(res, 200, {
+    users: users.map((item) => ({
+      ...item,
+      online: !!global.customerObj[item._id],
+    })),
+  });
 });
 
 exports.forgotPassword = catchAsync(async (req, res) => {
@@ -60,7 +65,7 @@ exports.uploadProfile = catchAsync(async (req, res) => {
   if (!profilepic) {
     return sendError(res, 400, "Profile image is required");
   }
-  console.log(profilepic,req.user)
+  console.log(profilepic, req.user);
   await User.findByIdAndUpdate(req.user, { profilepic });
   sendResponse(res, 200, "successfull");
 });
