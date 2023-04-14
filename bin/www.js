@@ -26,18 +26,16 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-ConnectMongo(process.env.MONGOD_URL).then((e) =>
-  console.log("conncted to mongo db")
-);
+ConnectMongo(process.env.MONGOD_URL).then((e) => console.log("conncted to mongo db"));
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "*",
+    origin: "*"
     // credentials: true,
-  },
+  }
 });
 
 global.customerObj = {};
@@ -46,17 +44,18 @@ io.on("connection", (socket) => {
   socket.on("admit-user", (userId) => {
     console.log("New User: ", userId);
     customerObj[userId] = socket.id;
+    socket.broadcast.emit("newuser", userId);
     console.log("customers: ", customerObj);
   });
   socket.on("chat", (data) => {
     socket.to(customerObj[data.receiver]).emit("receivedMessage", {
       receiver: data.receiver,
       msg: data.msg,
-      sender: data.sender,
+      sender: data.sender
     });
   });
   socket.on("typing", (data) => {
-    console.log(data,"typing")
+    console.log(data, "typing");
     socket.to(customerObj[data.receiver]).emit("istyping", data);
   });
 });
