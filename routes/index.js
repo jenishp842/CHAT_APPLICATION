@@ -1,5 +1,5 @@
 var express = require("express");
-const { sendChat, getChat, createGroup } = require("../controller/chat");
+const { sendChat, getChat, createGroup, getGroupChat } = require("../controller/chat");
 const multer = require("multer");
 const upload = multer({
   storage: multer.diskStorage({
@@ -35,5 +35,6 @@ router.post("/get-user", getUser);
 router.post("/send", sendChat);
 router.post("/get-chat", getChat);
 router.post("/create-group",createGroup)
+router.post("/get-group",getGroupChat)
 
 module.exports = router;

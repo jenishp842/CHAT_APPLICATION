@@ -58,6 +58,10 @@ io.on("connection", (socket) => {
     console.log(data, "typing");
     socket.to(customerObj[data.receiver]).emit("istyping", data);
   });
+  socket.on("remove", (id) => {
+    delete customerObj[id];
+    socket.broadcast.emit("remove-user",id)
+  });
 });
 console.log(customerObj);
 io.on("error", () => console.log("error"));
