@@ -100,11 +100,20 @@ function Chat() {
       Socket.on("istyping", (data) => {
         setTypingData(data);
       });
+      Socket.on("newuser", (id) => {
+        setData((prev) =>
+          prev.map((item) =>
+            item._id === id ? { ...item, online: true } : item
+          )
+        );
+      });
     }
   }, [Socket.connected]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    Socket.emit("remove", loginUser._id);
+    Socket.disconnect();
     navigate("/");
   };
 

@@ -102,7 +102,15 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
                       <img src={i.profilepic} className="chat-image" />
                     )}
                     {i.typing ? `${i.name} is typing` : ""}
-                    <p className="user_list">{i.name}</p>
+                    <p
+                      className="user_list"
+                      style={
+                        i.online ? { color: "green", fontWeight: "600" } : {}
+                      }
+                    >
+                      {i.name}
+                    </p>
+                    {/* {i.online ? <div className="online"/> : null} */}
                   </div>
                 ))}
             </div>
