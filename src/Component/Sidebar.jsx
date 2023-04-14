@@ -44,9 +44,7 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
 
   const handleActiveGroupsClick = () => {
     setShowActiveUsers(false);
-
   };
-
 
   const handleActiveusersClick = () => {
     setShowActiveUsers(true);
@@ -92,21 +90,25 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
             <div className="chat__users">
               {data &&
                 (showActiveUsers ? data : activeGroups)?.map((i) => (
-                  <div className="user-chat" onClick={() => {
-                    onChatHandle(i);
-                  }}>
-                  
-                      {showActiveUsers && (
-                        <img src={i.profilepic} className="chat-image" />
-                      )}
-                      <p className="user_list" style={{ marginRight: "6px" }}>
-                        {i.name}
-                      </p>
-                      <span style={{ color: "green" }}>
-                        {" "}
-                        {i.typing ? `typing...` : ""}
-                      </span>
-                      
+                  <div
+                    className="user-chat"
+                    style={
+                      i.online ? { color: "green", fontWeight: "600" } : {}
+                    }
+                    onClick={() => {
+                      onChatHandle(i);
+                    }}
+                  >
+                    {showActiveUsers && (
+                      <img src={i.profilepic} className="chat-image" />
+                    )}
+                    <p className="user_list" style={{ marginRight: "6px" }}>
+                      {i.name}
+                    </p>
+                    <span style={{ color: "green" }}>
+                      {" "}
+                      {i.typing ? `typing...` : ""}
+                    </span>
                   </div>
                 ))}
             </div>
@@ -131,7 +133,6 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
       </div>
 
       {isModalOpen && <GroupModal users={data} closeModal={closeModal} />}
-      
     </>
   );
 };
