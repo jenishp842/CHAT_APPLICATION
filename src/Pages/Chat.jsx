@@ -9,6 +9,7 @@ import { Socket } from "../Socket";
 
 function Chat() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [currentChat, setCurrentChat] = useState({});
   const [typingData, setTypingData] = useState(null);
@@ -118,6 +119,19 @@ function Chat() {
       });
     }
   }, [Socket.connected]);
+
+  useEffect(() => {
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (!loginUser) {
+      navigate("/");
+    } else {
+      setIsLoading(false);
+    }
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
