@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ENDPOINT } from "../Endpoint";
 import axios from "axios";
 import { Socket } from "../Socket";
+import GroupModal from "./GroupModal";
 
 const ChatContent = ({
   handleLogout,
@@ -12,9 +13,13 @@ const ChatContent = ({
 }) => {
   const loginUser = JSON.parse(localStorage.getItem("token"));
   const chatContainerRef = useRef(null);
+  const [isGroupDetailsOpen, setIsGroupDetailsOpen] = useState(false);
   const [typing, setisTyping] = useState(false);
   const [timeout, setTiemout] = useState("");
   const [text, setText] = useState("");
+  const showUsers = () => {
+    setIsGroupDetailsOpen(currentChat.users);
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!text) return;
@@ -102,7 +107,8 @@ const ChatContent = ({
     <>
       <div className="chat__main">
         <header className="chat__mainHeader">
-          <p>{currentChat?.name}</p>
+          <p style={{cursor:"pointer"}} onClick={() => showUsers()}>{currentChat?.name}</p>
+
           <button className="leaveChat__btn" onClick={handleLogout}>
             LEAVE CHAT
           </button>
@@ -164,6 +170,14 @@ const ChatContent = ({
           </form>
         </div>
       </div>
+      {isGroupDetailsOpen && (
+        <GroupModal
+          isGroupDetailsOpen={isGroupDetailsOpen}
+          users={isGroupDetailsOpen}
+          closeModal={() => setIsGroupDetailsOpen(false)}
+          group={currentChat}
+        />
+      )}
     </>
   );
 };
