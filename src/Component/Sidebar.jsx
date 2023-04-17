@@ -22,25 +22,27 @@ const Sidebar = ({ data, setCurrentChat, currentChat, handleSelectUser }) => {
   };
 
   useEffect(() => {
-    axios
-      .post(
-        `${ENDPOINT}/get-group`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${
-              JSON.parse(localStorage.getItem("token"))?.token
-            }`,
-          },
-        }
-      )
-      .then((response) => {
-        setActiveGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const token = JSON.parse(localStorage.getItem("token"))?.token;
+    if (token) {
+      axios
+        .post(
+          `${ENDPOINT}/get-group`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setActiveGroups(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
+  
 
   const handleActiveGroupsClick = () => {
     setShowActiveUsers(false);

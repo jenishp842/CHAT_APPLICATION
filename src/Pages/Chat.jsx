@@ -9,14 +9,21 @@ import { Socket } from "../Socket";
 
 function Chat() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [currentChat, setCurrentChat] = useState({});
   const [typingData, setTypingData] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [chatData, setChatData] = useState({});
   const loginUser = JSON.parse(localStorage.getItem("token"));
+  useEffect(()=>{
+      if(!loginUser){
+        navigate("/");
+      }
+  },[])
   useEffect(() => {
-    if (currentChat?._id) {
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (loginUser && currentChat?._id) {
       axios
         .post(
           `${ENDPOINT}/get-chat`,
@@ -25,9 +32,7 @@ function Chat() {
           },
           {
             headers: {
-              Authorization: `Bearer ${
-                JSON.parse(localStorage.getItem("token"))?.token
-              }`,
+              Authorization: `Bearer ${loginUser.token}`,
             },
           }
         )
@@ -40,27 +45,32 @@ function Chat() {
         });
     }
   }, [currentChat]);
+  
   useEffect(() => {
-    axios
-      .post(
-        `${ENDPOINT}/get-user`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${
-              JSON.parse(localStorage.getItem("token"))?.token
-            }`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setData(response.data.data.users);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (loginUser) {
+      axios
+        .post(
+          `${ENDPOINT}/get-user`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${loginUser.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          setData(response.data.data.users);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      navigate("/");
+    }
   }, []);
+  
   useEffect(() => {
     if (receivedMessage) {
       if (
@@ -124,6 +134,19 @@ function Chat() {
       });
     }
   }, [Socket.connected]);
+
+  useEffect(() => {
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (!loginUser) {
+      navigate("/");
+    } else {
+      setIsLoading(false);
+    }
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handleLogout = () => {
     console.log("handle logout");
