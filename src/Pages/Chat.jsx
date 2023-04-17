@@ -115,6 +115,7 @@ function Chat() {
         );
       });
       Socket.on("remove-user", (id) => {
+        console.log("removed user", id);
         setData((prev) =>
           prev.map((item) =>
             item._id === id ? { ...item, online: false } : item
@@ -125,9 +126,10 @@ function Chat() {
   }, [Socket.connected]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    console.log("handle logout");
     Socket.emit("remove", loginUser._id);
-    Socket.disconnect();
+    // Socket.disconnect();
+    localStorage.removeItem("token");
     navigate("/");
   };
 
