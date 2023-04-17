@@ -22,11 +22,19 @@ const ChatContent = ({
       ...chatData,
       messages: [...chatData.messages, { message: text }],
     });
-    Socket.emit("chat", {
-      receiver: currentChat._id,
-      msg: text,
-      sender: loginUser._id,
-    });
+    if (currentChat?.isGroup) {
+      Socket.emit("group-chat", {
+        users: currentChat?.users?.filter((item) => item._id !== loginUser._id),
+        sender: loginUser._id,
+        id: currentChat._id,
+      });
+    } else {
+      Socket.emit("chat", {
+        receiver: currentChat._id,
+        msg: text,
+        sender: loginUser._id,
+      });
+    }
     setText("");
     axios
       .post(
@@ -56,7 +64,7 @@ const ChatContent = ({
   const handleInput = (e) => {
     clearTimeout(timeout);
     if (!typing) {
-      console.log("typing fe")
+      console.log("typing fe");
       setisTyping(true);
       Socket.emit("typing", {
         receiver: currentChat._id,
