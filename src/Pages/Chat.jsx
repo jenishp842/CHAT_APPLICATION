@@ -15,8 +15,14 @@ function Chat() {
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [chatData, setChatData] = useState({});
   const loginUser = JSON.parse(localStorage.getItem("token"));
+  useEffect(()=>{
+      if(!loginUser){
+        navigate("/");
+      }
+  },[])
   useEffect(() => {
-    if (currentChat?._id) {
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (loginUser && currentChat?._id) {
       axios
         .post(
           `${ENDPOINT}/get-chat`,
@@ -25,9 +31,7 @@ function Chat() {
           },
           {
             headers: {
-              Authorization: `Bearer ${
-                JSON.parse(localStorage.getItem("token"))?.token
-              }`,
+              Authorization: `Bearer ${loginUser.token}`,
             },
           }
         )
@@ -40,27 +44,32 @@ function Chat() {
         });
     }
   }, [currentChat]);
+  
   useEffect(() => {
-    axios
-      .post(
-        `${ENDPOINT}/get-user`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${
-              JSON.parse(localStorage.getItem("token"))?.token
-            }`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setData(response.data.data.users);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const loginUser = JSON.parse(localStorage.getItem("token"));
+    if (loginUser) {
+      axios
+        .post(
+          `${ENDPOINT}/get-user`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${loginUser.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          setData(response.data.data.users);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      navigate("/");
+    }
   }, []);
+  
   useEffect(() => {
     if (receivedMessage) {
       if (currentChat._id !== receivedMessage.sender) return;
