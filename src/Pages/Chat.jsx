@@ -73,14 +73,18 @@ function Chat() {
   
   useEffect(() => {
     if (receivedMessage) {
-      if (currentChat._id !== receivedMessage.sender) return;
-      setChatData((prev) => ({
-        ...prev,
-        messages: [
-          ...prev.messages,
-          { message: receivedMessage.msg, sender: receivedMessage.sender },
-        ],
-      }));
+      if (
+        currentChat._id === receivedMessage.sender ||
+        currentChat._id === receivedMessage.id
+      ) {
+        setChatData((prev) => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            { message: receivedMessage.msg, sender: receivedMessage.sender },
+          ],
+        }));
+      }
     }
   }, [receivedMessage]);
   useEffect(() => {
@@ -107,6 +111,9 @@ function Chat() {
           setReceivedMessage(data);
         }
       });
+      Socket.on("receive-group-chat", (data) => {
+        setReceivedMessage(data);
+      });
       Socket.on("istyping", (data) => {
         setTypingData(data);
       });
@@ -114,6 +121,13 @@ function Chat() {
         setData((prev) =>
           prev.map((item) =>
             item._id === id ? { ...item, online: true } : item
+          )
+        );
+      });
+      Socket.on("remove-user", (id) => {
+        setData((prev) =>
+          prev.map((item) =>
+            item._id === id ? { ...item, online: false } : item
           )
         );
       });
