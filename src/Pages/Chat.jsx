@@ -16,11 +16,11 @@ function Chat() {
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [chatData, setChatData] = useState({});
   const loginUser = JSON.parse(localStorage.getItem("token"));
-  useEffect(()=>{
-      if(!loginUser){
-        navigate("/");
-      }
-  },[])
+  useEffect(() => {
+    if (!loginUser) {
+      navigate("/");
+    }
+  }, []);
   useEffect(() => {
     const loginUser = JSON.parse(localStorage.getItem("token"));
     if (loginUser && currentChat?._id) {
@@ -29,6 +29,8 @@ function Chat() {
           `${ENDPOINT}/get-chat`,
           {
             chatuser: currentChat._id,
+            isGroup: currentChat?.isGroup,
+            groupId: currentChat?._id,
           },
           {
             headers: {
@@ -45,7 +47,7 @@ function Chat() {
         });
     }
   }, [currentChat]);
-  
+
   useEffect(() => {
     const loginUser = JSON.parse(localStorage.getItem("token"));
     if (loginUser) {
@@ -70,7 +72,7 @@ function Chat() {
       navigate("/");
     }
   }, []);
-  
+
   useEffect(() => {
     if (receivedMessage) {
       if (

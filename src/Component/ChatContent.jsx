@@ -32,6 +32,7 @@ const ChatContent = ({
         users: currentChat?.users?.filter((item) => item._id !== loginUser._id),
         sender: loginUser._id,
         id: currentChat._id,
+        msg: text,
       });
     } else {
       Socket.emit("chat", {
@@ -107,7 +108,9 @@ const ChatContent = ({
     <>
       <div className="chat__main">
         <header className="chat__mainHeader">
-          <p style={{cursor:"pointer"}} onClick={() => showUsers()}>{currentChat?.name}</p>
+          <p style={{ cursor: "pointer" }} onClick={() => showUsers()}>
+            {currentChat?.name}
+          </p>
 
           <button className="leaveChat__btn" onClick={handleLogout}>
             LEAVE CHAT
