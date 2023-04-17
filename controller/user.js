@@ -17,11 +17,11 @@ exports.Register = catchAsync(async (req, res, next) => {
 exports.Login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return sendError(res, 404, "email or password is incorrect");
+    return sendError(res, 400, "email or password is incorrect");
   }
   const comparePassword = await user.comparePassword(req.body.password);
   if (!comparePassword) {
-    return sendError(res, 404, "email or password is incorrcet");
+    return sendError(res, 400, "email or password is incorrcet");
   }
   const token = user.getJwt();
   user._doc.token = token;

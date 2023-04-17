@@ -12,15 +12,15 @@ exports.sendChat = catchAsync(async (req, res) => {
 exports.getGroupChat = catchAsync(async (req, res) => {
   const chats = await Chat.find({
     isGroup: true,
-    users: { $in: [req.user] },
-  }).populate("messages");
+    users: { $in: [req.user] }
+  }).populate("messages users");
   sendResponse(res, 200, chats);
 });
 exports.getChat = catchAsync(async (req, res) => {
   const { isGroup = false, chatuser } = req.body;
   const chats = await Chat.findOne({
     isGroup,
-    users: { $all: [chatuser, req.user] },
+    users: { $all: [chatuser, req.user] }
   }).populate("messages");
   if (chats) {
     sendResponse(res, 200, chats);
@@ -30,7 +30,7 @@ exports.getChat = catchAsync(async (req, res) => {
       isGroup: false,
       name: "single",
       users: [req.user, chatuser],
-      messages: [],
+      messages: []
     });
     sendResponse(res, 200, newchat);
   }
@@ -48,7 +48,7 @@ exports.createGroup = catchAsync(async (req, res) => {
     isGroup: true,
     name,
     users: [req.user, ...users],
-    messages: [],
+    messages: []
   });
   sendResponse(res, 200, newchat);
 });
