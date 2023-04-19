@@ -13,26 +13,41 @@ exports.getGroupChat = catchAsync(async (req, res) => {
   const chats = await Chat.find({
     isGroup: true,
     users: { $in: [req.user] }
-  }).populate("messages users");
+  }).populate("users");
   sendResponse(res, 200, chats);
 });
 exports.getChat = catchAsync(async (req, res) => {
-  const { isGroup = false, chatuser } = req.body;
-  const chats = await Chat.findOne({
-    isGroup,
-    users: { $all: [chatuser, req.user] }
-  }).populate("messages");
-  if (chats) {
-    sendResponse(res, 200, chats);
+  const { isGroup, chatuser, groupId } = req.body;
+  if (isGroup) {
+    const messages = await Message.find(
+      {
+        chat: groupId
+      },
+      { message: 1, sender: 1 }
+    ).populate("sender");
+    sendResponse(res, 200, { messages, _id: groupId });
   } else {
-    // const chatuserdata = await Chat.findOne({ _id: chatuser });
-    const newchat = await Chat.create({
-      isGroup: false,
-      name: "single",
-      users: [req.user, chatuser],
-      messages: []
+    const chat = await Chat.findOne({
+      users: { $all: [chatuser, req.user] }
     });
-    sendResponse(res, 200, newchat);
+    if (chat) {
+      const messages = await Message.find(
+        {
+          chat: chat._id
+        },
+        { message: 1, sender: 1 }
+      );
+      sendResponse(res, 200, { messages, _id: chat._id });
+    } else {
+      // const chatuserdata = await Chat.findOne({ _id: chatuser });
+      const newchat = await Chat.create({
+        isGroup: false,
+        name: "single",
+        users: [req.user, chatuser],
+        messages: []
+      });
+      sendResponse(res, 200, newchat);
+    }
   }
 });
 

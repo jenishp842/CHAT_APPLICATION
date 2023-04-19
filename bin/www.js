@@ -59,16 +59,17 @@ io.on("connection", (socket) => {
     socket.to(customerObj[data.receiver]).emit("istyping", data);
   });
   socket.on("remove", (id) => {
-    delete customerObj[id];
+    console.log(id);
+    delete customerObj[`${id}`];
+    console.log(customerObj);
     socket.broadcast.emit("remove-user", id);
   });
   socket.on("group-chat", (data) => {
-    const users = data?.users
-      ?.map((item) => customerObj[item])
-      .filter((item) => item);
+    const users = data?.users?.map((item) => customerObj[item]).filter((item) => item);
     socket.to(users).emit("receive-group-chat", {
       sender: data?.sender,
       id: data?.id,
+      msg: data?.msg
     });
   });
 });
