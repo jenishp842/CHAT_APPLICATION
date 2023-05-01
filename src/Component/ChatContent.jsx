@@ -23,10 +23,6 @@ const ChatContent = ({
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!text) return;
-    setChatData({
-      ...chatData,
-      messages: [...chatData.messages, { message: text }],
-    });
     if (currentChat?.isGroup) {
       Socket.emit("group-chat", {
         users: currentChat?.users?.filter((item) => item._id !== loginUser._id),
@@ -38,7 +34,10 @@ const ChatContent = ({
       Socket.emit("chat", {
         receiver: currentChat._id,
         msg: text,
-        sender: loginUser._id,
+        sender: {
+          _id: loginUser._id,
+          name: loginUser.name,
+        },
       });
     }
     setText("");
@@ -58,7 +57,19 @@ const ChatContent = ({
         }
       )
       .then((response) => {
-        console.log(response);
+        setChatData({
+          ...chatData,
+          messages: [
+            ...chatData.messages,
+            {
+              message: text,
+              sender: {
+                _id: loginUser._id,
+                name: loginUser.name,
+              },
+            },
+          ],
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -122,16 +133,16 @@ const ChatContent = ({
             <div className="message__chats">
               <p
                 className={`${
-                  currentChat._id === item.sender
+                  loginUser._id !== item.sender?._id
                     ? "receiver_name"
                     : "sender__name"
                 } `}
               >
-                {currentChat._id === item.sender ? currentChat.name : "You"}
+                {loginUser._id !== item.sender?._id ? item.sender?.name : "You"}
               </p>
               <div
                 className={
-                  currentChat._id === item.sender
+                  loginUser._id !== item.sender?._id
                     ? "message__recipient"
                     : "message__sender"
                 }
